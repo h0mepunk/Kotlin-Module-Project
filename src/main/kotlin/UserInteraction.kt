@@ -23,26 +23,26 @@ enum class Action {
     EXIT
 }
 
-abstract class Menu {
-    abstract val items: List<Action>
+abstract class Menu(
+    var exitToPrev: () -> Unit,
 
-    abstract fun exitToPrev()
+) {
+    abstract val items: List<Action>
 
     abstract fun switchCommands()
 }
 
-class ArchiveMenu : Menu() {
+class ArchiveMenu(
+    exitToPrev: () -> Unit
+) : Menu(exitToPrev) {
     override val items = listOf(Action.CREATE, Action.VIEW, Action.EXIT)
 
-    override fun exitToPrev() {
-
-    }
 
     override fun switchCommands() {
         UserInteraction().printMenu(items)
         when (UserInteraction().readCommand()) {
-            0 -> Note.create()
-            1 -> Notes.show()
+            0 -> Note().create()
+            1 -> Archive().showNotes()
             2 -> exitToPrev()
             else -> {
                 UserInteraction().incorrectInput(items.size)
@@ -52,18 +52,25 @@ class ArchiveMenu : Menu() {
     }
 }
 
-class MainMenu : Menu() {
+class MainMenu(
+    exitToPrev: () -> Unit
+) : Menu(exitToPrev) {
     override val items = listOf(Action.CREATE, Action.VIEW, Action.EXIT)
 
-    override fun exitToPrev() {
-        exit()
+    var archives: MutableList<Archive> = mutableListOf()
+
+    fun showArchives() {
+        for (i in archives.indices) {
+            println("$i. ${archives[i].name}")
+        }
+        println("Архивы показаны")
     }
 
     override fun switchCommands() {
         UserInteraction().printMenu(items)
         when (UserInteraction().readCommand()) {
-            0 -> Archive.create()
-            1 -> Archives.show()
+            0 -> Archive().create()
+            1 -> showArchives()
             2 -> exitToPrev()
             else -> {
                 UserInteraction().incorrectInput(items.size)
@@ -73,17 +80,16 @@ class MainMenu : Menu() {
     }
 }
 
-class NoteMenu : Menu() {
+class NoteMenu(
+    exitToPrev: () -> Unit
+) : Menu(exitToPrev) {
     override val items = listOf(Action.VIEW, Action.EXIT)
 
-    override fun exitToPrev() {
-        archiveMenu()
-    }
 
     override fun switchCommands() {
         UserInteraction().printMenu(items)
         when (UserInteraction().readCommand()) {
-            0 -> viewNote()
+            0 -> Note().show()
             1 -> exitToPrev()
             else -> {
                 UserInteraction().incorrectInput(items.size)

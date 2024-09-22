@@ -3,7 +3,11 @@ import java.awt.Menu
 fun main(args: Array<String>) {
 
     val menu = UserInteraction()
-    menu.mainMenu()
+    val archiveMenu = ArchiveMenu()
+    val noteMenu = NoteMenu()
+    val mainMenu = MainMenu()
+
+    mainMenu.switchCommands()
 }
 
 
