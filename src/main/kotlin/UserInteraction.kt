@@ -1,12 +1,10 @@
-import javax.swing.text.Position
-import kotlin.system.exitProcess
 
 class UserInteraction {
     fun readCommand(): Int {
         return readLine()?.toIntOrNull() ?: -1
     }
 
-    fun printMenu(menu: List<Action>) {
+    fun printMenu(menu: List<MenuItem>) {
         menu.forEachIndexed { index, item ->
             println("$index. $item")
         }
@@ -17,84 +15,31 @@ class UserInteraction {
     }
 }
 
-enum class Action {
-    CREATE,
-    VIEW,
-    EXIT
-}
-
 abstract class Menu(
-    var exitToPrev: () -> Unit,
+    val menuItems: List<MenuItem> = listOf()
 
 ) {
-    abstract val items: List<Action>
-
-    abstract fun switchCommands()
-}
-
-class ArchiveMenu(
-    exitToPrev: () -> Unit
-) : Menu(exitToPrev) {
-    override val items = listOf(Action.CREATE, Action.VIEW, Action.EXIT)
-
-
-    override fun switchCommands() {
-        UserInteraction().printMenu(items)
-        when (UserInteraction().readCommand()) {
-            0 -> Note().create()
-            1 -> Archive().showNotes()
-            2 -> exitToPrev()
-            else -> {
-                UserInteraction().incorrectInput(items.size)
-                switchCommands()
-            }
+    fun switchCommands() {
+        userInteraction.printMenu(menuItems)
+        val command = userInteraction.readCommand()
+        if (command in menuItems.indices ) {
+            menuItems[command].command()
+        } else {
+            userInteraction.incorrectInput(menuItems.size)
+            switchCommands()
         }
     }
+
+    var userInteraction = UserInteraction()
 }
 
-class MainMenu(
-    exitToPrev: () -> Unit
-) : Menu(exitToPrev) {
-    override val items = listOf(Action.CREATE, Action.VIEW, Action.EXIT)
+class MenuItem(
+    val title: String,
+    val command: () -> Unit
+)
 
-    var archives: MutableList<Archive> = mutableListOf()
+class ArchiveMenu(items: List<MenuItem>): Menu(items)
 
-    fun showArchives() {
-        for (i in archives.indices) {
-            println("$i. ${archives[i].name}")
-        }
-        println("Архивы показаны")
-    }
+class MainMenu(items: List<MenuItem>) : Menu(items)
 
-    override fun switchCommands() {
-        UserInteraction().printMenu(items)
-        when (UserInteraction().readCommand()) {
-            0 -> Archive().create()
-            1 -> showArchives()
-            2 -> exitToPrev()
-            else -> {
-                UserInteraction().incorrectInput(items.size)
-                switchCommands()
-            }
-        }
-    }
-}
-
-class NoteMenu(
-    exitToPrev: () -> Unit
-) : Menu(exitToPrev) {
-    override val items = listOf(Action.VIEW, Action.EXIT)
-
-
-    override fun switchCommands() {
-        UserInteraction().printMenu(items)
-        when (UserInteraction().readCommand()) {
-            0 -> Note().show()
-            1 -> exitToPrev()
-            else -> {
-                UserInteraction().incorrectInput(items.size)
-                switchCommands()
-            }
-        }
-    }
-}
+class NoteMenu(items: List<MenuItem>) : Menu(items)

@@ -1,11 +1,40 @@
 import java.awt.Menu
+import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
 
+    val currentArchive = Archive()
+    val archives = Archives()
+
     val menu = UserInteraction()
-    val archiveMenu = ArchiveMenu()
-    val noteMenu = NoteMenu()
-    val mainMenu = MainMenu()
+
+
+    val noteMenuItems: List<MenuItem> = listOf(
+        MenuItem("Show notes", { Note().show() }),
+        MenuItem("Exit", { })
+    )
+
+    val mainMenuItems: List<MenuItem> = listOf(
+        MenuItem("Create archive", { Archive().create() }),
+        MenuItem("Show archives", { archives.showArchives() }),
+        MenuItem("Exit", { })
+    )
+
+    val mainMenu = MainMenu(
+        {
+            println("Ну вот и все!")
+            exitProcess(0)
+        }, mainMenuItems
+    )
+
+    val archiveMenuItems: List<MenuItem> = listOf(
+        MenuItem("Create archive", { Archive().create() }),
+        MenuItem("Show archives", { Archive().show() }),
+        MenuItem("Exit to prev", { mainMenu.switchCommands() })
+    )
+
+    val archiveMenu = ArchiveMenu({mainMenu.switchCommands()}, archiveMenuItems)
+    val noteMenu = NoteMenu({archiveMenu.switchCommands()}, noteMenuItems)
 
     mainMenu.switchCommands()
 }

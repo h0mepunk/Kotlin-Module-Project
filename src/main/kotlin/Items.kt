@@ -1,8 +1,27 @@
-class Archive {
-    var name: String? = ""
-    var notes: MutableList<Note> = mutableListOf()
+abstract class Item {
+    abstract var name: String?
 
-    fun create() {
+    abstract fun show()
+
+    abstract fun create()
+}
+
+abstract class Items<T: Item> {
+    abstract var itemsList: MutableList<T>
+
+    fun show() {
+        for (i in itemsList.indices) {
+            println("$i. ${itemsList[i].name}")
+        }
+    }
+}
+
+
+class Archive : Item() {
+    override var name: String? = ""
+    private var notes: MutableList<Note> = mutableListOf()
+
+    override fun create() {
         println("Введите название архива")
         name = readLine() ?: ""
         println("Архив создан")
@@ -16,7 +35,7 @@ class Archive {
         println("Заметка добавлена")
     }
 
-    fun showNotes() {
+    override fun show() {
         for (i in notes.indices) {
             println("$i. ${notes[i].name}")
         }
@@ -24,11 +43,11 @@ class Archive {
     }
 }
 
-class Note {
-    var name: String? = ""
+class Note : Item() {
+    override var name: String? = ""
     var text: String? = ""
 
-    fun create() {
+    override fun create() {
         println("Введите название заметки")
         name = readLine() ?: ""
         println("Заметка создана")
@@ -40,8 +59,26 @@ class Note {
         println("Текст заметки введён")
     }
 
-    fun show() {
+    override fun show() {
         println(text)
         println("Заметка показана")
+    }
+}
+
+class Archives: Items<Archive>() {
+    override var itemsList: MutableList<Archive> = mutableListOf()
+
+    fun showArchives() {
+        super.show()
+        println("Архивы показаны")
+    }
+}
+
+class Notes: Items<Note>() {
+    override var itemsList: MutableList<Note> = mutableListOf()
+
+    fun showNote() {
+        super.show()
+        println("Заметки показаны")
     }
 }
