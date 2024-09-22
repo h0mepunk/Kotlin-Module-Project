@@ -48,3 +48,7 @@ class ArchiveMenu(items: List<MenuItem>, exitToPrev: () -> Unit): Menu(items, ex
 class MainMenu(items: List<MenuItem>, exitToPrev: () -> Unit) : Menu(items, exitToPrev)
 
 class NoteMenu(items: List<MenuItem>, exitToPrev: () -> Unit) : Menu(items, exitToPrev)
+
+class ArchivesListMenu(items: List<MenuItem>, exitToPrev: () -> Unit) : Menu(items, exitToPrev)
+
+class NotesListMenu(items: List<MenuItem>, exitToPrev: () -> Unit) : Menu(items, exitToPrev)

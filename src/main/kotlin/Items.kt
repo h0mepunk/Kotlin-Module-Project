@@ -3,7 +3,7 @@ abstract class Item {
 
     abstract fun show()
 
-    abstract fun create()
+    abstract fun create(): Item
 }
 
 abstract class Items<T: Item> {
@@ -19,25 +19,26 @@ abstract class Items<T: Item> {
 
 class Archive : Item() {
     override var name: String? = ""
-    private var notes: MutableList<Note> = mutableListOf()
+    var notes: Notes = Notes()
 
-    override fun create() {
+    override fun create(): Archive {
         println("Введите название архива")
         name = readLine() ?: ""
         println("Архив создан")
+        return this
     }
 
     fun addNote() {
         val note = Note()
         note.create()
         note.inputText()
-        notes.add(note)
+        notes.itemsList.add(note)
         println("Заметка добавлена")
     }
 
     override fun show() {
-        for (i in notes.indices) {
-            println("$i. ${notes[i].name}")
+        for (i in notes.itemsList.indices) {
+            println("$i. ${notes.itemsList[i].name}")
         }
         println("Заметки показаны")
     }
@@ -47,10 +48,11 @@ class Note : Item() {
     override var name: String? = ""
     var text: String? = ""
 
-    override fun create() {
+    override fun create(): Note {
         println("Введите название заметки")
         name = readLine() ?: ""
         println("Заметка создана")
+        return this
     }
 
     fun inputText() {
@@ -77,7 +79,7 @@ class Archives: Items<Archive>() {
 class Notes: Items<Note>() {
     override var itemsList: MutableList<Note> = mutableListOf()
 
-    fun showNote() {
+    fun showNotes() {
         super.show()
         println("Заметки показаны")
     }
