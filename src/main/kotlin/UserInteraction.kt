@@ -1,4 +1,3 @@
-
 class UserInteraction {
     fun readCommand(): Int {
         return readLine()?.toIntOrNull() ?: -1
@@ -23,12 +22,15 @@ abstract class Menu(
         while (true) {
             userInteraction.printMenu(menuItems)
             val command = userInteraction.readCommand()
-            if (command in menuItems.indices - 1 ) {
-                menuItems[command].command()
-            } else if (command == menuItems.indices.last) {
+            if (command == menuItems.indices.last){
+                println("log? exit to prev")
                 exitToPrev()
             }
-            else {
+            else if (command in menuItems.indices) {
+               println("log? ${menuItems[command].title}")
+                menuItems[command].command()
+            } else {
+                println("log? incorrect input + ${menuItems.size} + ${menuItems.indices} + ${menuItems.indices.last} + $command")
                 userInteraction.incorrectInput(menuItems.size)
                 switchCommands()
             }

@@ -71,7 +71,7 @@ class Note : Item() {
 
     fun inputText() {
         println("Введите текст заметки")
-        text = readLine() ?: ""
+        text = (text +  readLine()) ?: ""
         println("Текст заметки введён")
     }
 
@@ -85,7 +85,7 @@ class Archives: Items<Archive>() {
     override var itemsList: MutableList<Archive> = mutableListOf()
 
     fun showArchives() {
-        super.show()
+        this.show()
         println("Архивы показаны")
     }
 }
@@ -94,7 +94,7 @@ class Notes: Items<Note>() {
     override var itemsList: MutableList<Note> = mutableListOf()
 
     fun showNotes() {
-        super.show()
+        this.show()
         println("Заметки показаны")
     }
 }

@@ -1,12 +1,7 @@
-import MenuItems.Companion.mainMenu
 import kotlin.system.exitProcess
 
 fun main(args: Array<String>) {
-
-    var currentArchive = Archive()
-    var currentNote = Note()
-    val archives = Archives()
-    val menuItems = MenuItems(currentNote, currentArchive, archives)
+    val menuItems = MenuItems(Note(), Archive(), Archives())
 
 
     menuItems.mainMenu.switchCommands()
@@ -17,12 +12,18 @@ class MenuItems(
     var currentNote: Note = Note(),
     var currentArchive: Archive = Archive(),
     val archives: Archives = Archives(),
-    val notes: Notes = Notes(),
 ) {
     val noteMenuItems: List<MenuItem> = listOf(
-        MenuItem("Show notes", { currentNote.show() }),
+        MenuItem("Add text") {
+            currentNote.inputText()
+            noteMenu.switchCommands()
+        },
+        MenuItem("Show notes") {
+            currentArchive.notes.showNotes()
+            notesListMenu.switchCommands()
+        },
         MenuItem(
-            "Exit", { })
+            "Exit", {archiveMenu.switchCommands() })
     )
 
     val mainMenuItems: List<MenuItem> = listOf(
@@ -30,11 +31,17 @@ class MenuItems(
             "Create archive"
         ) {
             archives.itemsList.add(Archive().create())
+            archiveMenu.switchCommands()
         },
         MenuItem(
-            "Show archives", { archives.showArchives() }),
+            "Show archives"
+        ) {
+            archives.showArchives()
+            archivesListMenu.switchCommands()
+        },
         MenuItem(
-            "Exit", { })
+            "Exit"
+        ) { exitProcess(0) }
     )
 
     val archiveMenuItems: List<MenuItem> = listOf(
@@ -42,14 +49,17 @@ class MenuItems(
             "Create archive"
         ) {
             archives.itemsList.add(Archive().create())
+            archiveMenu.switchCommands()
         },
         MenuItem(
             "Show archives"
         ) {
             archives.showArchives()
+            archivesListMenu.switchCommands()
         },
         MenuItem(
-            "Exit to prev", { mainMenu.switchCommands()})
+            "Exit to prev"
+        ) { mainMenu.switchCommands() }
     )
 
     val archivesListMenuItems: List<MenuItem> = listOf(
@@ -58,7 +68,12 @@ class MenuItems(
         ) {
             currentArchive = archives.choose()
             currentArchive.notes.showNotes()
+            notesListMenu.switchCommands()
         },
+        MenuItem("Create note") {
+            currentArchive.notes.itemsList.add(Note().create())
+            noteMenu.switchCommands()
+                                },
         MenuItem(
             "Exit to prev", { archiveMenu.switchCommands() })
     )
@@ -68,8 +83,9 @@ class MenuItems(
         MenuItem("Show notes") {
             currentArchive.notes.showNotes()
             currentNote = currentArchive.notes.choose()
+            notesListMenu.switchCommands()
         },
-        MenuItem("Exit to prev", { noteMenu.switchCommands() })
+        MenuItem("Exit to prev", { archiveMenu.switchCommands() })
     )
 
     val mainMenu = MainMenu(mainMenuItems, { exitProcess(0) })
