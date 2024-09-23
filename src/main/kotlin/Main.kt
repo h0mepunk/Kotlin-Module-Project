@@ -1,5 +1,3 @@
-import kotlin.system.exitProcess
-
 fun main(args: Array<String>) {
     val menuItems = MenuItems(Note(), Archive(), Archives())
 
@@ -7,88 +5,6 @@ fun main(args: Array<String>) {
     menuItems.mainMenu.switchCommands()
 
 }
-
-class MenuItems(
-    private var currentNote: Note = Note(),
-    private var currentArchive: Archive = Archive(),
-    private val archives: Archives = Archives(),
-) {
-    private val noteMenuItems: List<MenuItem> = listOf(
-        MenuItem("Add text") {
-            currentNote.inputText()
-            noteMenu.switchCommands()
-        },
-        MenuItem("Show notes") {
-            currentArchive.notes.showNotes()
-            notesListMenu.switchCommands()
-        },
-        MenuItem(
-            "Exit", {archiveMenu.switchCommands() })
-    )
-
-    private val mainMenuItems: List<MenuItem> = listOf(
-        MenuItem(
-            "Create archive"
-        ) {
-            archives.itemsList.add(Archive().create())
-            archiveMenu.switchCommands()
-        },
-        MenuItem(
-            "Show archives"
-        ) {
-            archives.showArchives()
-            archivesListMenu.switchCommands()
-        },
-        MenuItem(
-            "Exit"
-        ) { exitProcess(0) }
-    )
-
-    private val archiveMenuItems: List<MenuItem> = listOf(
-        MenuItem(
-            "Create archive"
-        ) {
-            archives.itemsList.add(Archive().create())
-            archiveMenu.switchCommands()
-        },
-        MenuItem(
-            "Show archives"
-        ) {
-            archives.showArchives()
-            archivesListMenu.switchCommands()
-        },
-        MenuItem(
-            "Exit to prev"
-        ) { mainMenu.switchCommands() }
-    )
-
-    private val archivesListMenuItems: List<MenuItem> = listOf(
-        MenuItem("Choose archive") {
-            currentArchive = archives.choose()
-            archiveMenu.switchCommands()
-        },
-        MenuItem("Exit to prev") { mainMenu.switchCommands() }
-    )
-
-
-    private val notesListMenuItems: List<MenuItem> = listOf(
-        MenuItem("Show notes") {
-            currentArchive.notes.showNotes()
-            currentNote = currentArchive.notes.choose()
-            notesListMenu.switchCommands()
-        },
-        MenuItem("Exit to prev") { archiveMenu.switchCommands() }
-    )
-
-    val mainMenu = MainMenu(mainMenuItems, { exitProcess(0) })
-
-    private val archiveMenu = ArchiveMenu( archiveMenuItems) { mainMenu.switchCommands() }
-    private val noteMenu = NoteMenu(noteMenuItems) { archiveMenu.switchCommands() }
-    private val notesListMenu = NotesListMenu( notesListMenuItems) { noteMenu.switchCommands() }
-    private val archivesListMenu = ArchivesListMenu( archivesListMenuItems) { archiveMenu.switchCommands() }
-}
-
-
 //Приложение «Заметки» должно иметь возможность:
 //Добавлять архивы (наборы заметок);
 //Добавлять заметки в архивы;

@@ -17,84 +17,15 @@ abstract class Items<T: Item> {
     }
 
     fun choose(): T{
-            println("Введите номер элемента")
-            val noteNumber = userInteraction.readCommand()
-            if (noteNumber in itemsList.indices) {
-                itemsList[noteNumber].show()
-                return itemsList[noteNumber]
+            println("Enter element number")
+            val elementNumber = userInteraction.readCommand()
+            if (elementNumber in itemsList.indices) {
+                itemsList[elementNumber].show()
+                return itemsList[elementNumber]
             } else {
-                println("Неверный номер элемента")
+                println("Wrong element number. Number should be in range from 0 to ${itemsList.size - 1}")
                 choose()
             }
-        return itemsList[noteNumber]
-    }
-}
-
-
-class Archive : Item() {
-    override var name: String? = ""
-    var notes: Notes = Notes()
-
-    override fun create(): Archive {
-        println("Введите название архива")
-        name = readLine() ?: ""
-        println("Архив создан")
-        return this
-    }
-
-    fun addNote() {
-        val note = Note()
-        note.create()
-        note.inputText()
-        notes.itemsList.add(note)
-        println("Заметка добавлена")
-    }
-
-    override fun show() {
-        for (i in notes.itemsList.indices) {
-            println("$i. ${notes.itemsList[i].name}")
-        }
-        println("Заметки показаны")
-    }
-}
-
-class Note : Item() {
-    override var name: String? = ""
-    var text: String? = ""
-
-    override fun create(): Note {
-        println("Введите название заметки")
-        name = readLine() ?: ""
-        println("Заметка создана")
-        return this
-    }
-
-    fun inputText() {
-        println("Введите текст заметки")
-        text = (text +  readLine()) ?: ""
-        println("Текст заметки введён")
-    }
-
-    override fun show() {
-        println(text)
-        println("Заметка показана")
-    }
-}
-
-class Archives: Items<Archive>() {
-    override var itemsList: MutableList<Archive> = mutableListOf()
-
-    fun showArchives() {
-        this.show()
-        println("Архивы показаны")
-    }
-}
-
-class Notes: Items<Note>() {
-    override var itemsList: MutableList<Note> = mutableListOf()
-
-    fun showNotes() {
-        this.show()
-        println("Заметки показаны")
+        return itemsList[elementNumber]
     }
 }
