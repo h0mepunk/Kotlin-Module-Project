@@ -9,11 +9,11 @@ fun main(args: Array<String>) {
 }
 
 class MenuItems(
-    var currentNote: Note = Note(),
-    var currentArchive: Archive = Archive(),
-    val archives: Archives = Archives(),
+    private var currentNote: Note = Note(),
+    private var currentArchive: Archive = Archive(),
+    private val archives: Archives = Archives(),
 ) {
-    val noteMenuItems: List<MenuItem> = listOf(
+    private val noteMenuItems: List<MenuItem> = listOf(
         MenuItem("Add text") {
             currentNote.inputText()
             noteMenu.switchCommands()
@@ -26,7 +26,7 @@ class MenuItems(
             "Exit", {archiveMenu.switchCommands() })
     )
 
-    val mainMenuItems: List<MenuItem> = listOf(
+    private val mainMenuItems: List<MenuItem> = listOf(
         MenuItem(
             "Create archive"
         ) {
@@ -44,7 +44,7 @@ class MenuItems(
         ) { exitProcess(0) }
     )
 
-    val archiveMenuItems: List<MenuItem> = listOf(
+    private val archiveMenuItems: List<MenuItem> = listOf(
         MenuItem(
             "Create archive"
         ) {
@@ -62,38 +62,30 @@ class MenuItems(
         ) { mainMenu.switchCommands() }
     )
 
-    val archivesListMenuItems: List<MenuItem> = listOf(
-        MenuItem(
-            "Show notes"
-        ) {
+    private val archivesListMenuItems: List<MenuItem> = listOf(
+        MenuItem("Choose archive") {
             currentArchive = archives.choose()
-            currentArchive.notes.showNotes()
-            notesListMenu.switchCommands()
+            archiveMenu.switchCommands()
         },
-        MenuItem("Create note") {
-            currentArchive.notes.itemsList.add(Note().create())
-            noteMenu.switchCommands()
-                                },
-        MenuItem(
-            "Exit to prev", { archiveMenu.switchCommands() })
+        MenuItem("Exit to prev") { mainMenu.switchCommands() }
     )
 
 
-    val notesListMenuItems: List<MenuItem> = listOf(
+    private val notesListMenuItems: List<MenuItem> = listOf(
         MenuItem("Show notes") {
             currentArchive.notes.showNotes()
             currentNote = currentArchive.notes.choose()
             notesListMenu.switchCommands()
         },
-        MenuItem("Exit to prev", { archiveMenu.switchCommands() })
+        MenuItem("Exit to prev") { archiveMenu.switchCommands() }
     )
 
     val mainMenu = MainMenu(mainMenuItems, { exitProcess(0) })
 
-    val archiveMenu = ArchiveMenu( archiveMenuItems, {mainMenu.switchCommands()})
-    val noteMenu = NoteMenu(noteMenuItems, {archiveMenu.switchCommands()})
-    val notesListMenu = NotesListMenu( notesListMenuItems, {noteMenu.switchCommands()})
-    val archivesListMenu = ArchivesListMenu( archivesListMenuItems, {archiveMenu.switchCommands()})
+    private val archiveMenu = ArchiveMenu( archiveMenuItems) { mainMenu.switchCommands() }
+    private val noteMenu = NoteMenu(noteMenuItems) { archiveMenu.switchCommands() }
+    private val notesListMenu = NotesListMenu( notesListMenuItems) { noteMenu.switchCommands() }
+    private val archivesListMenu = ArchivesListMenu( archivesListMenuItems) { archiveMenu.switchCommands() }
 }
 
 
