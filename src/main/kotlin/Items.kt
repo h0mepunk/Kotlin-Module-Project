@@ -8,11 +8,25 @@ abstract class Item {
 
 abstract class Items<T: Item> {
     abstract var itemsList: MutableList<T>
+    val userInteraction: UserInteraction = UserInteraction()
 
     fun show() {
         for (i in itemsList.indices) {
             println("$i. ${itemsList[i].name}")
         }
+    }
+
+    fun choose(): T{
+            println("Введите номер элемента")
+            val noteNumber = userInteraction.readCommand()
+            if (noteNumber in itemsList.indices) {
+                itemsList[noteNumber].show()
+                return itemsList[noteNumber]
+            } else {
+                println("Неверный номер элемента")
+                choose()
+            }
+        return itemsList[noteNumber]
     }
 }
 
