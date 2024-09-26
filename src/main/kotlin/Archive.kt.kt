@@ -1,5 +1,6 @@
-class Archive : Item() {
+class Archive(
     override var name: String? = ""
+) : Item(name) {
     var notes: Notes = Notes()
 
     override fun create(): Archive {

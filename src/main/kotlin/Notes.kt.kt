@@ -1,5 +1,5 @@
 class Notes: Items<Note>() {
-    override var itemsList: MutableList<Note> = mutableListOf()
+    override var itemsList: List<Note> = listOf()
 
     fun showNotes() {
         this.show()

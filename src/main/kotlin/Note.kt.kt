@@ -1,6 +1,7 @@
-class Note : Item() {
+class Note(
     override var name: String? = ""
-    var text: String? = ""
+) : Item(name) {
+    private var text: String? = ""
 
     override fun create(): Note {
         println("Input note name")

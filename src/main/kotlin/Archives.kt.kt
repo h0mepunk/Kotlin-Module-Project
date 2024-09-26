@@ -1,5 +1,5 @@
 class Archives: Items<Archive>() {
-    override var itemsList: MutableList<Archive> = mutableListOf()
+    override var itemsList: List<Archive> = listOf()
 
     fun showArchives() {
         this.show()

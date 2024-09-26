@@ -1,14 +1,14 @@
-abstract class Item {
-    abstract var name: String?
-
+abstract class Item(
+    open var name: String?
+) {
     abstract fun show()
 
     abstract fun create(): Item
 }
 
 abstract class Items<T: Item> {
-    abstract var itemsList: MutableList<T>
-    val userInteraction: UserInteraction = UserInteraction()
+    abstract var itemsList: List<T>
+    private val userInteraction: UserInteraction = UserInteraction()
 
     fun show() {
         for (i in itemsList.indices) {

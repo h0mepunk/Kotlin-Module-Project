@@ -20,7 +20,7 @@ abstract class Menu(
         }
     }
 
-    var userInteraction = UserInteraction()
+    private var userInteraction = UserInteraction()
 }
 
 class MenuItem(
@@ -29,13 +29,13 @@ class MenuItem(
 )
 
 class MenuItems(
-    private var currentNote: Note = Note(),
+    private var currentNote: Note? = null,
     private var currentArchive: Archive = Archive(),
     private val archives: Archives = Archives(),
 ) {
     private val noteMenuItems: List<MenuItem> = listOf(
         MenuItem("Add text") {
-            currentNote.inputText()
+            currentNote?.inputText() ?: println("Note is not created")
             noteMenu.switchCommands()
         },
         MenuItem(
@@ -49,7 +49,7 @@ class MenuItems(
         MenuItem(
             "Create archive"
         ) {
-            archives.itemsList.add(Archive().create())
+            archives.itemsList += (Archive().create())
             archiveMenu.switchCommands()
         },
         MenuItem(
@@ -69,7 +69,8 @@ class MenuItems(
         MenuItem(
             "Create note"
         ) {
-            currentArchive.notes.itemsList.add(currentNote.create())
+            currentNote = Note().create()
+            currentArchive.notes.itemsList += currentNote!!
             noteMenu.switchCommands()
         },
         MenuItem(
