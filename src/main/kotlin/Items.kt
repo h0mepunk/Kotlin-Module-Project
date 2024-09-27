@@ -11,8 +11,12 @@ abstract class Items<T: Item> {
     private val userInteraction: UserInteraction = UserInteraction()
 
     fun show() {
-        for (i in itemsList.indices) {
-            println("$i. ${itemsList[i].name}")
+        if (itemsList.isEmpty()) {
+            println("List is empty")
+        } else {
+            for (i in itemsList.indices) {
+                println("$i. ${itemsList[i].name}")
+            }
         }
     }
 

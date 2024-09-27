@@ -2,7 +2,9 @@ fun main(args: Array<String>) {
     val menuItems = MenuItems(Note(), Archive(), Archives())
 
 
-    menuItems.mainMenu.switchCommands()
+    while (true) {
+        menuItems.mainMenu.switchCommands()
+    }
 
 }
 //Приложение «Заметки» должно иметь возможность:

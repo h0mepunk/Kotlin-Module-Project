@@ -2,24 +2,18 @@ import kotlin.system.exitProcess
 
 abstract class Menu(
     private val menuItems: List<MenuItem> = listOf(),
-    val exitToPrev: () -> Unit
 ) {
     fun switchCommands() {
-        while (true) {
             userInteraction.printMenu(menuItems)
-            val command = userInteraction.readCommand()
-            if (command == menuItems.indices.last){
-                exitToPrev()
-                return
+            when (val command = userInteraction.readCommand()) {
+                in menuItems.indices -> {
+                    menuItems[command].command()
+                }
+                else -> {
+                    userInteraction.incorrectInput(menuItems.size)
+                    switchCommands()
+                }
             }
-            else if (command in menuItems.indices) {
-                menuItems[command].command()
-                return
-            } else {
-                userInteraction.incorrectInput(menuItems.size)
-                switchCommands()
-            }
-        }
     }
 
     private var userInteraction = UserInteraction()
@@ -109,20 +103,20 @@ class MenuItems(
         }
     )
 
-    val mainMenu = MainMenu(mainMenuItems) { exitProcess(0) }
+    val mainMenu = MainMenu(mainMenuItems)
 
-    private val archiveMenu = ArchiveMenu( archiveMenuItems) { mainMenu.switchCommands() }
-    private val noteMenu = NoteMenu(noteMenuItems) { archiveMenu.switchCommands() }
-    private val notesListMenu = NotesListMenu( notesListMenuItems) { noteMenu.switchCommands() }
-    private val archivesListMenu = ArchivesListMenu( archivesListMenuItems) { archiveMenu.switchCommands() }
+    private val archiveMenu = ArchiveMenu( archiveMenuItems)
+    private val noteMenu = NoteMenu(noteMenuItems)
+    private val notesListMenu = NotesListMenu( notesListMenuItems)
+    private val archivesListMenu = ArchivesListMenu( archivesListMenuItems)
 }
 
-class ArchiveMenu(items: List<MenuItem>, exitToPrev: () -> Unit): Menu(items, exitToPrev)
+class ArchiveMenu(items: List<MenuItem>): Menu(items)
 
-class MainMenu(items: List<MenuItem>, exitToPrev: () -> Unit) : Menu(items, exitToPrev)
+class MainMenu(items: List<MenuItem>) : Menu(items)
 
-class NoteMenu(items: List<MenuItem>, exitToPrev: () -> Unit) : Menu(items, exitToPrev)
+class NoteMenu(items: List<MenuItem>) : Menu(items)
 
-class ArchivesListMenu(items: List<MenuItem>, exitToPrev: () -> Unit) : Menu(items, exitToPrev)
+class ArchivesListMenu(items: List<MenuItem>) : Menu(items)
 
-class NotesListMenu(items: List<MenuItem>, exitToPrev: () -> Unit) : Menu(items, exitToPrev)
+class NotesListMenu(items: List<MenuItem>) : Menu(items)
