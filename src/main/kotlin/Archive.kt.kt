@@ -1,19 +1,36 @@
 class Archive(
     override var name: String? = ""
 ) : Item(name) {
-    var notes: Notes = Notes()
+    private var notes: Notes = Notes()
+
+    fun addNote(note: Note) {
+        notes.itemsList?.plus(Note().create())
+        println("Note added")
+    }
 
     override fun create(): Archive {
         println("Enter archive name")
-        name = readLine() ?: ""
+        name = readlnOrNull() ?: ""
         println("Archive created")
         return this
     }
 
     override fun show() {
-        for (i in notes.itemsList.indices) {
-            println("$i. ${notes.itemsList[i].name}")
+        if (notes.itemsList.isNullOrEmpty()) {
+            println("Notes list is empty")
+        } else {
+            for (i in notes!!.itemsList.indices) {
+                println("$i. ${notes!!.itemsList[i].name}")
+            }
+            println("Notes shown")
         }
-        println("Notes shown")
+    }
+
+    fun showNotes() {
+        notes.show()
+    }
+
+    fun chooseNote(): Note {
+        return notes.choose()!!
     }
 }

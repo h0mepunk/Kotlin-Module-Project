@@ -10,9 +10,11 @@ abstract class Menu(
             val command = userInteraction.readCommand()
             if (command == menuItems.indices.last){
                 exitToPrev()
+                return
             }
             else if (command in menuItems.indices) {
                 menuItems[command].command()
+                return
             } else {
                 userInteraction.incorrectInput(menuItems.size)
                 switchCommands()
@@ -70,13 +72,13 @@ class MenuItems(
             "Create note"
         ) {
             currentNote = Note().create()
-            currentArchive.notes.itemsList += currentNote!!
+            currentArchive.addNote(currentNote!!)
             noteMenu.switchCommands()
         },
         MenuItem(
             "Show notes"
         ) {
-            currentArchive.notes.showNotes()
+            currentArchive.showNotes()
             notesListMenu.switchCommands()
         },
         MenuItem(
@@ -99,7 +101,7 @@ class MenuItems(
 
     private val notesListMenuItems: List<MenuItem> = listOf(
         MenuItem("Choose note") {
-            currentNote = currentArchive.notes.choose()
+            currentNote = currentArchive.chooseNote()
             noteMenu.switchCommands()
         },
         MenuItem("Exit to archive menu") {
