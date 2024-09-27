@@ -4,7 +4,7 @@ class Archive(
     private var notes: Notes = Notes()
 
     fun addNote(note: Note) {
-        notes.itemsList?.plus(Note().create())
+        notes.itemsList.plus(note)
         println("Note added")
     }
 
@@ -16,11 +16,11 @@ class Archive(
     }
 
     override fun show() {
-        if (notes.itemsList.isNullOrEmpty()) {
+        if (notes.itemsList.isEmpty()) {
             println("Notes list is empty")
         } else {
-            for (i in notes!!.itemsList.indices) {
-                println("$i. ${notes!!.itemsList[i].name}")
+            for (i in notes.itemsList.indices) {
+                println("$i. ${notes.itemsList[i].name}")
             }
             println("Notes shown")
         }
@@ -31,6 +31,6 @@ class Archive(
     }
 
     fun chooseNote(): Note {
-        return notes.choose()!!
+        return notes.choose()
     }
 }
